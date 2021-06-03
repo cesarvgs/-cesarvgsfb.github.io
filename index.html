@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Autentificación con Google</title>
+
+<body class="text-center">
+
+<main class="form-signin">
+
+    <h1 class="h3 mb-3 fw-normal" id="user_name">Autentificación con Google</h1>
+
+    <button onclick="loginWithGoogle()" class="w-100 btn btn-lg btn-primary" id="login_btn">Iniciar con Google</button>
+
+    <button onclick="logout()" style="display: none;" class="w-100 btn btn-lg btn-danger" id="logout_btn">Salir</button>
+</main>
+
+        <!--Firebase-->
+    
+        <!-- Insert these scripts at the bottom of the HTML, but before you use any Firebase services -->
+           
+       <script src="https://www.gstatic.com/firebasejs/8.6.3/firebase-app.js"></script>
+    
+        <!-- If you enabled Analytics in your project, add the Firebase SDK for Analytics -->
+       <script src="https://www.gstatic.com/firebasejs/8.6.3/firebase-analytics.js"></script>
+
+             
+        <!-- Add Firebase products that you want to use -->
+        <script src="https://www.gstatic.com/firebasejs/7.23.0/firebase-auth.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.23.0/firebase-firestore.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.23.0/firebase-database.js"></script>
+        <script>
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  //place your firebase data in the locations indicated below to work.
+  var firebaseConfig = {
+    apiKey: "AIzaSyDnxfYAkT1EVicR7xGWlHCATCj_oqsFwbU",
+    authDomain: "cesarvgsfb.firebaseapp.com",
+    projectId: "cesarvgsfb",
+    storageBucket: "cesarvgsfb.appspot.com",
+    messagingSenderId: "150197608696",
+    appId: "1:150197608696:web:cdb26c42eb7b95ef991b0d",
+    measurementId: "G-ZBPZEM3L2C"
+  };
+
+    // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+	  firebase.analytics();
+  </script>
+
+  <script type="text/javascript">
+    //variables
+    var login_btn     = document.getElementById("login_btn"),
+      logout_btn      = document.getElementById("logout_btn"),
+      user_image      = document.getElementById("user_image"),
+      user_name_h1    = document.getElementById("user_name");
+
+    //iniciar con Google
+    var loginWithGoogle = function(){
+
+      var provider = new firebase.auth.GoogleAuthProvider();
+      firebase.auth().signInWithPopup(provider).then(function(result) {
+      // This gives you a Google Access Token. You can use it to access the Google API.
+      var token = result.credential.accessToken;
+      // The signed-in user info.
+      var user = result.user;
+
+      console.log(user.displayName);
+      updateUser(user);
+      // ...
+    }).catch(function(error) {
+      // Handle Errors here.
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      // The email of the user's account used.
+      var email = error.email;
+      // The firebase.auth.AuthCredential type that was used.
+      var credential = error.credential;
+      // ...
+
+      console.log(errorMessage);
+    });
+    }
+
+    //agregar datos del usuario
+    var updateUser = function(user){
+      user_name_h1.innerHTML = "Hola, " + user.displayName;
+      user_image.src = user.photoURL;
+
+      login_btn.style.display = "none";
+      logout_btn.style.display = "inline-block";
+    }
+
+    var logout = function(){
+      firebase.auth().signOut().then(function() {
+        user_name_h1.innerHTML = "Acceso";
+        login_btn.style.display = "inline-block";
+        logout_btn.style.display = "none";
+
+    }).catch(function(error) {
+      // An error happened.
+    });
+
+    }
+
+
+  </script>
+
+</body>
+</html>
